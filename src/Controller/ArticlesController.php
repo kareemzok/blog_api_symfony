@@ -105,4 +105,22 @@ class ArticlesController extends AbstractController
 
         return new JsonResponse('Article deleted!', Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/article/search", name="product_api_search", methods={"GET"})
+     */
+    public function search(ArticlesRepository $articleRepository, SerializerInterface $serializer, string $keyword): JsonResponse
+    {
+
+
+        $articles = $articleRepository->searchForArticles($keyword);
+
+        if (empty($articles)) {
+            return new JsonResponse(['error' => 'No result fond'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = $serializer->serialize($articles, 'json');
+
+        return new JsonResponse(json_decode($data), Response::HTTP_OK);
+    }
 }

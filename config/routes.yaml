@@ -28,7 +28,7 @@ articles_api_delete:
    controller: 'App\Controller\ArticlesController::delete'
    methods: ['DELETE']
 
-product_api_search_by_id:
-   path: /api/article/search/{id}
-   controller: 'App\Controller\ArticlesController::searchForArticle'
+product_api_search:
+   path: /api/articles/search/{keyword}
+   controller: 'App\Controller\ArticlesController::search'
    methods: ['GET']

@@ -16,6 +16,20 @@ class ArticlesRepository extends ServiceEntityRepository
         parent::__construct($registry, Articles::class);
     }
 
+    public function searchForArticles($keyword): array
+    {
+        // below is for exact match
+        return $this->createQueryBuilder('a')
+            ->orWhere('a.title = :title')
+            ->orWhere('a.body = :body')
+            ->setParameter('title', $keyword)
+            ->setParameter('body', $keyword)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
     //    /**
     //     * @return Articles[] Returns an array of Articles objects
     //     */
@@ -40,4 +54,6 @@ class ArticlesRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
 }
