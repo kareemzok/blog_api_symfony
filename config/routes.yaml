@@ -14,7 +14,7 @@ articles_api_show:
    methods: ['GET']
 
 articles_api_create:
-   path: /api/products
+   path: /api/article/add
    controller: 'App\Controller\ArticlesController::create'
    methods: ['POST']
 
@@ -24,6 +24,11 @@ articles_api_update:
    methods: ['PUT']
 
 articles_api_delete:
-   path: /api/products/{id}
+   path: /api/article/{id}
    controller: 'App\Controller\ArticlesController::delete'
    methods: ['DELETE']
+
+product_api_search_by_id:
+   path: /api/article/search/{id}
+   controller: 'App\Controller\ArticlesController::searchForArticle'
+   methods: ['GET']

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Articles;
 use App\Repository\ArticlesRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -32,7 +33,7 @@ class ArticlesController extends AbstractController
 
 
     /**
-     * @Route("/", name="create", methods={"POST"})
+     * @Route("/", name="articles_api_create", methods={"POST"})
      */
     public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
     {
@@ -40,10 +41,11 @@ class ArticlesController extends AbstractController
 
         $article = $serializer->deserialize($requestData, Articles::class, 'json');
 
-        if (!$article->getName() || !$article->getDescription() || !$article->getPrice()) {
+        if (!$article->getTitle() || !$article->getBody() || !$article->isStatus()) {
             return new JsonResponse(['error' => 'Missing required fields'], Response::HTTP_BAD_REQUEST);
         }
-
+        $article->setPostDate(new DateTime());
+        $article->setDeleted(false);
         $entityManager->persist($article);
         $entityManager->flush();
 
@@ -59,7 +61,7 @@ class ArticlesController extends AbstractController
     public function show(EntityManagerInterface $entityManager, SerializerInterface $serializer, int $id): JsonResponse
     {
         $article = $entityManager->getRepository(Articles::class)->find($id);
-      
+
         if (!$article) {
 
             return new JsonResponse(['error' => 'Article with id ' . $id . ' not found'], Response::HTTP_NOT_FOUND);
@@ -72,27 +74,32 @@ class ArticlesController extends AbstractController
     /**
      * @Route("/{id}", name="articles_api_update", methods={"PUT"})
      */
-    public function update(Articles $articles, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, int $id): JsonResponse
+    public function update(Articles $article, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, int $id): JsonResponse
     {
-        $requestData = $request->getContent();
-        dd($request);
-        $updatedProduct = $serializer->deserialize($requestData, Articles::class, 'json');
 
-        $articles->setTitle($updatedProduct->getName());
-        $articles->setBody($updatedProduct->getDescription());
-        $articles->setStatus($updatedProduct->getPrice());
+        $requestData = $request->getContent();
+        $updatedArticle = $serializer->deserialize($requestData, Articles::class, 'json');
+
+        $article->setTitle($updatedArticle->getTitle());
+        $article->setBody($updatedArticle->getBody());
+        $article->setStatus($updatedArticle->isStatus());
 
         $entityManager->flush();
 
-        return new JsonResponse('Article updated!', Response::HTTP_OK);
+        return new JsonResponse('Article with id ' . $id . ' is updated!', Response::HTTP_OK);
     }
 
 
     /**
-     * @Route("/{id}", name="delete", methods={"DELETE"})
+     * @Route("/{id}", name="articles_api_delete", methods={"DELETE"})
      */
-    public function delete(Articles $article, EntityManagerInterface $entityManager): JsonResponse
+    public function delete(EntityManagerInterface $entityManager, int $id): JsonResponse
     {
+        $article = $entityManager->getRepository(Articles::class)->find($id);
+
+        if (empty($article)) {
+            return new JsonResponse(['error' => 'Article not found'], Response::HTTP_NOT_FOUND);
+        }
         $entityManager->remove($article);
         $entityManager->flush();
 
