@@ -20,10 +20,10 @@ class ArticlesRepository extends ServiceEntityRepository
     {
         // below is for exact match
         return $this->createQueryBuilder('a')
-            ->orWhere('a.title = :title')
-            ->orWhere('a.body = :body')
-            ->setParameter('title', $keyword)
-            ->setParameter('body', $keyword)
+            ->orWhere('a.title LIKE :title')
+            ->orWhere('a.body LIKE :body')
+            ->setParameter('title', '%' . $keyword . '%')
+            ->setParameter('body', '%' . $keyword . '%')
             ->getQuery()
             ->getResult()
         ;

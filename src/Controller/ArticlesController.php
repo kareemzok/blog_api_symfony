@@ -38,6 +38,7 @@ class ArticlesController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
     {
         $requestData = $request->getContent();
+        // Missing body and status
 
         $article = $serializer->deserialize($requestData, Articles::class, 'json');
 
