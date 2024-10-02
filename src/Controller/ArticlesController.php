@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class ArticlesController extends AbstractController
@@ -18,8 +20,18 @@ class ArticlesController extends AbstractController
     /**
      * @Route("/", name="articles_api", methods={"GET"})
      */
-    public function index(ArticlesRepository $articleRepository, SerializerInterface $serializer): JsonResponse
+    public function index(Request $request, ArticlesRepository $articleRepository, SerializerInterface $serializer, RateLimiterFactory $anonymousApiLimiter): JsonResponse
     {
+
+        // create a limiter based on a unique identifier of the client
+        $limiter = $anonymousApiLimiter->create($request->getClientIp());
+
+        // the argument of consume() is the number of tokens to consume
+        // and returns an object of type Limit
+        if (false === $limiter->consume(3)->isAccepted()) {
+            throw new TooManyRequestsHttpException();
+        }
+
 
         $articles = $articleRepository->findAll();
 
@@ -35,8 +47,19 @@ class ArticlesController extends AbstractController
     /**
      * @Route("/", name="articles_api_create", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, RateLimiterFactory $anonymousApiLimiter): Response
     {
+        
+         // create a limiter based on a unique identifier of the client
+         $limiter = $anonymousApiLimiter->create($request->getClientIp());
+
+         // the argument of consume() is the number of tokens to consume
+         // and returns an object of type Limit
+         if (false === $limiter->consume(3)->isAccepted()) {
+             throw new TooManyRequestsHttpException();
+         }
+
+
         $requestData = $request->getContent();
         // Missing body and status
 
@@ -59,8 +82,18 @@ class ArticlesController extends AbstractController
     /**
      * @Route("/article/{id}", name="articles_api_show", methods={"POST"})
      */
-    public function show(EntityManagerInterface $entityManager, SerializerInterface $serializer, int $id): JsonResponse
+    public function show(EntityManagerInterface $entityManager, SerializerInterface $serializer, RateLimiterFactory $anonymousApiLimiter, int $id): JsonResponse
     {
+
+         // create a limiter based on a unique identifier of the client
+         $limiter = $anonymousApiLimiter->create($request->getClientIp());
+
+         // the argument of consume() is the number of tokens to consume
+         // and returns an object of type Limit
+         if (false === $limiter->consume(3)->isAccepted()) {
+             throw new TooManyRequestsHttpException();
+         }
+
         $article = $entityManager->getRepository(Articles::class)->find($id);
 
         if (!$article) {
@@ -75,7 +108,7 @@ class ArticlesController extends AbstractController
     /**
      * @Route("/{id}", name="articles_api_update", methods={"PUT"})
      */
-    public function update(Articles $article, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, int $id): JsonResponse
+    public function update(Articles $article, Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, RateLimiterFactory $anonymousApiLimiter, int $id): JsonResponse
     {
 
         $requestData = $request->getContent();
@@ -94,8 +127,18 @@ class ArticlesController extends AbstractController
     /**
      * @Route("/{id}", name="articles_api_delete", methods={"DELETE"})
      */
-    public function delete(EntityManagerInterface $entityManager, int $id): JsonResponse
+    public function delete(Request $request, EntityManagerInterface $entityManager, RateLimiterFactory $anonymousApiLimiter, int $id): JsonResponse
     {
+
+         // create a limiter based on a unique identifier of the client
+         $limiter = $anonymousApiLimiter->create($request->getClientIp());
+
+         // the argument of consume() is the number of tokens to consume
+         // and returns an object of type Limit
+         if (false === $limiter->consume(3)->isAccepted()) {
+             throw new TooManyRequestsHttpException();
+         }
+
         $article = $entityManager->getRepository(Articles::class)->find($id);
 
         if (empty($article)) {
@@ -110,8 +153,17 @@ class ArticlesController extends AbstractController
     /**
      * @Route("/article/search", name="product_api_search", methods={"GET"})
      */
-    public function search(ArticlesRepository $articleRepository, SerializerInterface $serializer, string $keyword): JsonResponse
+    public function search(Request $request, ArticlesRepository $articleRepository, SerializerInterface $serializer, RateLimiterFactory $anonymousApiLimiter,string $keyword): JsonResponse
     {
+
+         // create a limiter based on a unique identifier of the client
+         $limiter = $anonymousApiLimiter->create($request->getClientIp());
+
+         // the argument of consume() is the number of tokens to consume
+         // and returns an object of type Limit
+         if (false === $limiter->consume(3)->isAccepted()) {
+             throw new TooManyRequestsHttpException();
+         }
 
 
         $articles = $articleRepository->searchForArticles($keyword);
