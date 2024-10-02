@@ -3,6 +3,15 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+    
+api_login_check:
+    path: /api/login_check
+
+api_user_register:
+   path: /api/user/register
+   controller: 'App\Controller\AuthController::register'
+   methods: ['POST']
+
 articles_api:
    path: /api/articles
    controller: 'App\Controller\ArticlesController::index'
