@@ -60,6 +60,16 @@
 		{
 			"name": "articles_api_update",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{blog-api-token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -93,6 +103,16 @@
 		{
 			"name": "articles_api_delete",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{blog-api-token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"body": {
@@ -126,11 +146,21 @@
 		{
 			"name": "articles_api_create",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{blog-api-token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\":\"New article 1\",\r\n}",
+					"raw": "{\r\n    \"title\":\"New article 1\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -162,6 +192,16 @@
 				"disableBodyPruning": true
 			},
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{blog-api-token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"body": {
@@ -194,6 +234,91 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "api_login_check",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"auth-user\",\r\n    \"password\":\"abcdef\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login_check",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login_check"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "sss",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"auth-user\",\r\n    \"password\":\"abcdef\",\r\n    \"email\":\"test@email.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/user/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user",
+						"register"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "sss",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "blog-api-token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3Mjc4ODc3OTYsImV4cCI6MTcyNzg5MTM5Niwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiYXV0aC11c2VyIn0.LyeWBNWgEJUSt6tgrJH9rsrWeJ7HPP_OsmYY1DSAsX2HyLS-2yr1iD5qAWZvGIsgiWFF1bViPjow2RI3Qa7KFLahFXKFUYyR_fBPjX6b37vpdgSJB_HGFLCw3zeNGRxqokNj__1_aLm_MF-oWjAHKgDnQXlFrDv1tsWDvAPviJ2rBvMFN6v3HV6yZ6M2ctz2oUbLrBvMxKZlnI7Mts3lZs3ZapprAI3ywDfD856rD3ObW86LRe-k1qO7VCL5gL0YJZNHA-u-TVXB-kf0UNzTeQabZQuiez2Kybtn4aEcJ4g-wxrHfk2WnicZgb5RncUAARgYGbZMbthKMEWRLNG79A"
 		}
 	]
 }
