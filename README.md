@@ -37,7 +37,7 @@ php bin/console server:run
 ```
 
 # API Documentation
-The API documentation is available in OpenAPI/Swagger format. You can access it by navigating to http://localhost:8000/api/doc.
+The API documentation is available in OpenAPI/Swagger format. You can access in the folder screens-documents in this repo
 
 # Testing
 To run the unit tests:
