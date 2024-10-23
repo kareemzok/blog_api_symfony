@@ -26,6 +26,11 @@ composer install
 php bin/console doctrine:migrations:migrate
 ```
 
+5. Setup JWT and generate token
+```bash
+https://github.com/lexik/LexikJWTAuthenticationBundle?tab=readme-ov-file
+```
+
 ## Usage
 
 ```python
